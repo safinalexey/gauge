@@ -1,0 +1,26 @@
+{
+  "name": "gauge",
+  "version": "1.0.0",
+  "main": "index.html",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt",
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "<name>": "<package>"
+  },
+  "devDependencies": {
+    "<test-framework-name>": "<version>"
+  },
+  "authors": [
+    "safinalexey <safin.alexey91@gmail.com>"
+  ],
+  "description": "simple gauge for web",
+  "license": "MIT",
+  "homepage": "none"
+}
