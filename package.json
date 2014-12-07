@@ -1,0 +1,26 @@
+{
+  "name": "gauge",
+  "version": "1.0.0",
+  "description": "simple gauge for web",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/safinalexey/gauge.git"
+  },
+  "author": "Safin Alexey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/safinalexey/gauge/issues"
+  },
+  "homepage": "https://github.com/safinalexey/gauge",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-contrib-connect": "^0.9.0",
+    "grunt-contrib-jade": "^0.13.0",
+    "grunt-contrib-stylus": "^0.20.0"
+  }
+}
