@@ -1,11 +1,9 @@
 var gauge;
 
-gauge = new Gauge("gauge");
+gauge = new Gauge('gauge');
 
 gauge.drawGauge();
 
-gauge.drawCircle();
-
 gauge.drawPointer();
 
-gauge.drawPointer([200, 75]);
+gauge.drawText(document.getElementById('gaugeRange'), document.getElementById('marksAmount'));

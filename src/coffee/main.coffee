@@ -1,4 +1,4 @@
-gauge = new Gauge("gauge")
+gauge = new Gauge('gauge')
 gauge.drawGauge()
-gauge.drawCircle()
 gauge.drawPointer()
+gauge.drawText(document.getElementById('gaugeRange'), document.getElementById('marksAmount'))

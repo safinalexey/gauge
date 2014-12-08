@@ -11,7 +11,10 @@ html(class='no-js')
     body
         canvas(id='gauge', width='500', height='500')
         p Gauge range
-        input#gaugeRange
+        input#gaugeRange(value = 10)
+        p Marks amount
+        input#marksAmount(value = 5)
+        input(type='button', value='Draw')
         script(src='bower_components/jquery/dist/jquery.min.js')
         script(src='node_modules/webcomponents.js/webcomponents.min.js')
         script(src='js/gauge.js')

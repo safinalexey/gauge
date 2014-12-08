@@ -49,9 +49,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
-    // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-    // plugin's task(s), then test the result.
-    // NOTE: We run the task twice to check for file overwrite issues.
     grunt.registerTask('complieJade', ['jade:compile']);
     grunt.registerTask('compileCoffee', ['coffee:compile']);
     grunt.registerTask('compileStylus', ['stylus:compile']);

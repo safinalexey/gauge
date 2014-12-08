@@ -1,15 +1,36 @@
 class Gauge
   constructor: (gaugeId) ->
     @drawingCanvas = document.getElementById gaugeId
-    @pointer = @drawingCanvas.getContext "2d"
+    @ctx = @drawingCanvas.getContext "2d"
+    @centerX = @drawingCanvas.width / 2
+    @centerY = @drawingCanvas.height / 2
+#    @drawingCanvas.addEventListener "mousemove", ((evt) =>
+#      mousePos = @getMousePos(@drawingCanvas, evt)
+#      message = "Mouse position: " + mousePos.x + "," + mousePos.y
+#      @writeMessage @drawingCanvas, message
+#      return
+#    ), false
+
+  writeMessage : (canvas, message) ->
+    context = @ctx
+    context.clearRect 0, 0, canvas.width, canvas.height
+    context.font = "18pt Calibri"
+    context.fillStyle = "black"
+    context.fillText message, 10, 25
+    return
+
+  getMousePos : (canvas, evt) ->
+    rect = canvas.getBoundingClientRect()
+    x: evt.clientX - rect.left
+    y: evt.clientY - rect.top
 
   drawGauge: (x = @drawingCanvas.width / 2,
               y = @drawingCanvas.height / 2,
               radius = 175,
-              startAngle = 1.1 * Math.PI,
-              endAngle = 1.9 * Math.PI) ->
+              startAngle = .9 * Math.PI,
+              endAngle = 2.1 * Math.PI) ->
 
-    gauge = @drawingCanvas.getContext "2d"
+    gauge = @ctx
 
     gaugeSettings =
       x : x
@@ -23,36 +44,50 @@ class Gauge
     gauge.arc(gaugeSettings.x, gaugeSettings.y, gaugeSettings.radius, gaugeSettings.startAngle, gaugeSettings.endAngle, gaugeSettings.counterClockwise)
 
     gauge.lineWidth = 3
-    gauge.strokeStyle = 'black'
+    gauge.strokeStyle = '#666'
 
     gauge.stroke()
 
-  drawCircle: (centerX = @drawingCanvas.width / 2, centerY = @drawingCanvas.height / 2, radius = 10) ->
+  drawPointer: (centerX = @centerX, centerY = @centerY, radius = 10) ->
 
-    circle = @drawingCanvas.getContext "2d"
+    pointer = @ctx
 
     circleSettings =
       centerX : centerX
       centerY : centerY
       radius : radius
 
-    circle.beginPath()
-    circle.arc circleSettings.centerX, circleSettings.centerY, circleSettings.radius, 0, 2 * Math.PI, false
-    circle.fillStyle = "black"
-    circle.fill()
+    x = Math.round(centerX + 75 * Math.cos(10))
+    y = Math.round(centerY + 75 * Math.sin(10))
 
-    circle.lineWidth = 5
-    circle.strokeStyle = "black"
+    pointer.lineWidth = 5
+    pointer.fillStyle = "#1e98e4"
 
-    circle.stroke()
+    pointer.beginPath()
+    pointer.arc circleSettings.centerX, circleSettings.centerY, circleSettings.radius, 0, 2 * Math.PI, false
+    pointer.fill()
 
-  drawPointer : (to = [@drawingCanvas.width / 2, 75]) ->
+    pointer.beginPath()
+    pointer.moveTo centerX - 5, centerY
+    pointer.lineTo x, y
+    pointer.lineTo centerX + 5, centerY
+    pointer.fill()
 
-    @pointer.beginPath()
-    @pointer.moveTo @drawingCanvas.width / 2 - 5, @drawingCanvas.height / 2
-    @pointer.lineTo to[0], to[1]
-    @pointer.lineTo @drawingCanvas.width / 2 + 5, @drawingCanvas.height / 2
-    @pointer.fill()
+  drawText : (range, marks, position = "out")->
 
-  turnPointer : ->
-    @pointer.clearRect(@drawingCanvas.width / 2 - 5, @drawingCanvas.height / 2, 20, 20)
+    context = @ctx
+    context.font = '14pt Tahoma';
+    context.fillStyle = "#000"
+    positionFactor = if position is "out" then 200 else 150
+
+    range = parseInt(range.value)
+    marks = parseInt(marks.value)
+    step  = range / marks
+    angleTerm = 1.2 / range
+
+    i = 0
+    while i <= range
+      x = Math.round(@centerY + positionFactor * Math.cos((0.9+angleTerm*i)*Math.PI))
+      y = Math.round(@centerX + positionFactor * Math.sin((0.9+angleTerm*i)*Math.PI))
+      context.fillText(i, x, y);
+      i += step
