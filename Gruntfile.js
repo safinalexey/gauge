@@ -30,6 +30,13 @@ module.exports = function (grunt) {
                 }
             }
         },
+        uglify: {
+            minify: {
+                files: {
+                    'js/gauge.min.js': ['js/gauge.js']
+                }
+            }
+        },
         connect: {
             server: {
                 options: {
@@ -48,10 +55,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.registerTask('complieJade', ['jade:compile']);
     grunt.registerTask('compileCoffee', ['coffee:compile']);
     grunt.registerTask('compileStylus', ['stylus:compile']);
+    grunt.registerTask('compileJS', ['uglify:minify']);
     grunt.registerTask('compileAll', ['jade:compile', 'stylus:compile', 'coffee:compile']);
     grunt.registerTask('compileAllAndRun', ['jade:compile', 'stylus:compile', 'coffee:compile', 'connect:server:keepalive']);
 

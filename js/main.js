@@ -1,9 +1,19 @@
-var gauge;
+var gauge, options;
 
-gauge = new Gauge('gauge');
+options = {
+  'gaugeRange': document.getElementById('gaugeRange'),
+  'marksAmount': document.getElementById('marksAmount')
+};
 
-gauge.drawGauge();
+gauge = new Gauge('gauge', options);
 
-gauge.drawPointer();
-
-gauge.drawText(document.getElementById('gaugeRange'), document.getElementById('marksAmount'));
+$('#draw').on('click', function() {
+  var position;
+  position = document.querySelector('input[name="valuesPosition"]').checked === true ? "in" : "out";
+  options = {
+    'gaugeRange': document.getElementById('gaugeRange'),
+    'marksAmount': document.getElementById('marksAmount'),
+    'valuesPosition': position
+  };
+  gauge.draw(options);
+});

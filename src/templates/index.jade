@@ -7,14 +7,25 @@ html(class='no-js')
         meta(name='description', content='')
         meta(name='viewport', content='width=device-width, initial-scale=1')
         link(rel='stylesheet', href='css/normalize.css')
+        link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.css')
         link(rel='stylesheet', href='css/style.css')
     body
-        canvas(id='gauge', width='500', height='500')
-        p Gauge range
-        input#gaugeRange(value = 10)
-        p Marks amount
-        input#marksAmount(value = 5)
-        input(type='button', value='Draw')
+        .container
+            .row
+                .col-md-6.col-md-offset-3
+                    canvas(id='gauge', width='500', height='500')
+                    form
+                        .form-group
+                            label(for="gaugeRange") Gauge range
+                            input#gaugeRange.form-control(value = 6)
+                        .form-group
+                            label(for="marksAmount") Marks amount
+                            input#marksAmount.form-control(value = 6)
+                        .checkbox
+                            label
+                                input(name='valuesPosition', type='checkbox', value='in')/
+                                | Values inside
+                        input#draw.btn.btn-default(type='button', value='Draw')
         script(src='bower_components/jquery/dist/jquery.min.js')
         script(src='node_modules/webcomponents.js/webcomponents.min.js')
         script(src='js/gauge.js')

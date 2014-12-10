@@ -1,28 +1,17 @@
 class Gauge
-  constructor: (gaugeId) ->
+  constructor: (gaugeId, @options) ->
     @drawingCanvas = document.getElementById gaugeId
     @ctx = @drawingCanvas.getContext "2d"
     @centerX = @drawingCanvas.width / 2
     @centerY = @drawingCanvas.height / 2
-#    @drawingCanvas.addEventListener "mousemove", ((evt) =>
-#      mousePos = @getMousePos(@drawingCanvas, evt)
-#      message = "Mouse position: " + mousePos.x + "," + mousePos.y
-#      @writeMessage @drawingCanvas, message
-#      return
-#    ), false
 
-  writeMessage : (canvas, message) ->
-    context = @ctx
-    context.clearRect 0, 0, canvas.width, canvas.height
-    context.font = "18pt Calibri"
-    context.fillStyle = "black"
-    context.fillText message, 10, 25
-    return
+    @draw(@options)
 
-  getMousePos : (canvas, evt) ->
-    rect = canvas.getBoundingClientRect()
-    x: evt.clientX - rect.left
-    y: evt.clientY - rect.top
+  draw : (@options) ->
+    @ctx.clearRect(0, 0, @drawingCanvas.width, @drawingCanvas.height);
+    @drawGauge()
+    @drawPointer()
+    @drawMarks(@options.gaugeRange, @options.marksAmount, @options.valuesPosition)
 
   drawGauge: (x = @drawingCanvas.width / 2,
               y = @drawingCanvas.height / 2,
@@ -57,8 +46,9 @@ class Gauge
       centerY : centerY
       radius : radius
 
-    x = Math.round(centerX + 75 * Math.cos(10))
-    y = Math.round(centerY + 75 * Math.sin(10))
+    pointerRadius = if @options.valuesPosition is "in" then 125 else 195
+    x = Math.round(centerX + pointerRadius * Math.cos(1.7*Math.PI))
+    y = Math.round(centerY + pointerRadius * Math.sin(1.7*Math.PI))
 
     pointer.lineWidth = 5
     pointer.fillStyle = "#1e98e4"
@@ -67,18 +57,19 @@ class Gauge
     pointer.arc circleSettings.centerX, circleSettings.centerY, circleSettings.radius, 0, 2 * Math.PI, false
     pointer.fill()
 
+    #TODO: сделать поворот основания
     pointer.beginPath()
     pointer.moveTo centerX - 5, centerY
     pointer.lineTo x, y
     pointer.lineTo centerX + 5, centerY
     pointer.fill()
 
-  drawText : (range, marks, position = "out")->
+  drawMarks : (range, marks, position = "out")->
 
     context = @ctx
     context.font = '14pt Tahoma';
     context.fillStyle = "#000"
-    positionFactor = if position is "out" then 200 else 150
+    positionFactor = if position is "out" then 215 else 150
 
     range = parseInt(range.value)
     marks = parseInt(marks.value)
@@ -87,7 +78,33 @@ class Gauge
 
     i = 0
     while i <= range
-      x = Math.round(@centerY + positionFactor * Math.cos((0.9+angleTerm*i)*Math.PI))
-      y = Math.round(@centerX + positionFactor * Math.sin((0.9+angleTerm*i)*Math.PI))
-      context.fillText(i, x, y);
+      x = Math.round(@centerY + positionFactor * Math.cos((0.9+angleTerm*i)*Math.PI)) - 5
+      y = Math.round(@centerX + positionFactor * Math.sin((0.9+angleTerm*i)*Math.PI)) + 5
+      context.fillText(i.toFixed(0), x, y);
+      i += step
+
+    @drawSerif(range, marks, position)
+
+  drawSerif : (range, marks, position = "out") ->
+
+    context = @ctx
+    context.lineWidth = 1
+    context.strokeStyle = '#666'
+    positionFactor = if position is "out" then 200 else 130
+
+    step  = range / marks
+    angleTerm = 1.2 / range
+
+    i = 0
+    while i <= range
+      x1 = Math.round(@centerY + (positionFactor-5) * Math.cos((0.9+angleTerm*i)*Math.PI))
+      y1 = Math.round(@centerX + (positionFactor-5) * Math.sin((0.9+angleTerm*i)*Math.PI))
+      x2 = Math.round(@centerY + positionFactor * Math.cos((0.9+angleTerm*i)*Math.PI))
+      y2 = Math.round(@centerX + positionFactor * Math.sin((0.9+angleTerm*i)*Math.PI))
+
+      context.beginPath();
+      context.moveTo(x1, y1);
+      context.lineTo(x2, y2);
+      context.stroke();
+
       i += step
